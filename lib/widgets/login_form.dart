@@ -1,3 +1,7 @@
+import 'package:api_application/Api/authentication_api.dart';
+import 'package:api_application/pages/home_page.dart';
+import 'package:api_application/utils/dialogs.dart';
+
 import 'package:api_application/utils/responsive.dart';
 import 'package:api_application/widgets/input_text.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +14,45 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  _submit() {
+  final GlobalKey<FormState> _formkey = GlobalKey();
+  String _email = '';
+  String _password = '';
+  final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
+  Future<void> _submit() async {
     final isOk = _formkey.currentState!.validate();
     // print('Form is Ok $isOk');
-    if (isOk) {}
+    if (isOk) {
+      ProgressDialog.show(context);
+      final response = await _authenticationAPI.login(
+        email: _email,
+        password: _password,
+      );
+      ProgressDialog.dissmiss(context);
+      if (response.data != null) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          HomePage.routeName,
+          (_) => false,
+        );
+      } else {
+        String message = response.error!.message;
+        if (response.error!.statusCode == -1) {
+          message = 'Bad network';
+        } else if (response.error!.statusCode == 403) {
+          message = "Invalid password";
+        } else if (response.error!.statusCode == 404) {
+          message = "User not found";
+        }
+
+        Dialogs.alert(
+          context,
+          title: 'Error',
+          description: message,
+        );
+      }
+    }
   }
 
-  final GlobalKey<FormState> _formkey = GlobalKey();
-  String email = '';
-  String password = '';
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive.of(context);
@@ -37,7 +71,7 @@ class _LoginFormState extends State<LoginForm> {
                 label: 'Email Address',
                 fontSize: responsive.dp(responsive.isTablet ? 1.2 : 1.5),
                 onChanged: (text) {
-                  email = text;
+                  _email = text;
                 },
                 validator: (text) {
                   if (!text!.contains('@')) {
@@ -67,7 +101,7 @@ class _LoginFormState extends State<LoginForm> {
                         fontSize:
                             responsive.dp(responsive.isTablet ? 1.2 : 1.5),
                         onChanged: (text) {
-                          password = text;
+                          _password = text;
                         },
                         validator: (text) {
                           if (text!.trim().isEmpty) {

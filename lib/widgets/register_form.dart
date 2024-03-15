@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:api_application/Api/authentication_api.dart';
 import 'package:api_application/pages/home_page.dart';
+import 'package:api_application/pages/login_page.dart';
 
 import 'package:api_application/utils/dialogs.dart';
 import 'package:api_application/utils/responsive.dart';
@@ -167,7 +168,10 @@ class _RegisterFormState extends State<RegisterForm> {
                       foregroundColor: Colors.pinkAccent,
                       elevation: 0,
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushNamed(
+                          context,
+                          LoginPage.routeName,
+                        );
                       },
                       label: Text(
                         'Sign In',

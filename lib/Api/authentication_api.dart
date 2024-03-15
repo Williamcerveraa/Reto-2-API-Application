@@ -14,13 +14,44 @@ class AuthenticationAPI {
     try {
       final response = await _dio.post(
         'http://192.168.0.98:9000/api/v1/register',
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
         data: {
           "username": username,
+          "email": email,
+          "password": password,
+        },
+      );
+      _logger.i(response.data);
+
+      return HttpResponse.success(response.data);
+    } catch (e) {
+      _logger.e(e);
+      int? statusCode = -1;
+      String? message = 'Unknown error';
+      dynamic data;
+      if (e is DioException) {
+        message = e.message;
+        if (e.response != null) {
+          statusCode = e.response!.statusCode;
+          message = e.response!.statusMessage;
+          data = e.response!.data;
+        }
+      }
+      return HttpResponse.failure(
+        statusCode: statusCode!,
+        message: message!,
+        data: data,
+      );
+    }
+  }
+
+  Future<HttpResponse> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await _dio.post(
+        'http://192.168.0.98:9000/api/v1/login',
+        data: {
           "email": email,
           "password": password,
         },
