@@ -1,82 +1,46 @@
+import 'package:api_application/helpers/http.dart';
 import 'package:api_application/helpers/http_response.dart';
-import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
+import 'package:api_application/models/authentication_response.dart';
 
+//'http://192.168.0.98:9000',
 class AuthenticationAPI {
-  final Dio _dio = Dio();
-  final Logger _logger = Logger();
+  final Http _http;
 
-  Future<HttpResponse> register({
+  AuthenticationAPI(this._http);
+
+  Future<HttpResponse<AuthenticationResponse>> register({
     required String username,
     required String email,
     required String password,
-  }) async {
-    try {
-      final response = await _dio.post(
-        'http://192.168.0.98:9000/api/v1/register',
-        data: {
-          "username": username,
-          "email": email,
-          "password": password,
-        },
-      );
-      _logger.i(response.data);
-
-      return HttpResponse.success(response.data);
-    } catch (e) {
-      _logger.e(e);
-      int? statusCode = -1;
-      String? message = 'Unknown error';
-      dynamic data;
-      if (e is DioException) {
-        message = e.message;
-        if (e.response != null) {
-          statusCode = e.response!.statusCode;
-          message = e.response!.statusMessage;
-          data = e.response!.data;
-        }
-      }
-      return HttpResponse.failure(
-        statusCode: statusCode!,
-        message: message!,
-        data: data,
-      );
-    }
+  }) {
+    return _http.request<AuthenticationResponse>(
+      '/api/v1/register',
+      method: 'POST',
+      data: {
+        "username": username,
+        "email": email,
+        "password": password,
+      },
+      parser: (data) {
+        return AuthenticationResponse.fromJson(data);
+      },
+    );
   }
 
-  Future<HttpResponse> login({
+  Future<HttpResponse<AuthenticationResponse>> login({
     required String email,
     required String password,
-  }) async {
-    try {
-      final response = await _dio.post(
-        'http://192.168.0.98:9000/api/v1/login',
-        data: {
-          "email": email,
-          "password": password,
-        },
-      );
-      _logger.i(response.data);
-
-      return HttpResponse.success(response.data);
-    } catch (e) {
-      _logger.e(e);
-      int? statusCode = -1;
-      String? message = 'Unknown error';
-      dynamic data;
-      if (e is DioException) {
-        message = e.message;
-        if (e.response != null) {
-          statusCode = e.response!.statusCode;
-          message = e.response!.statusMessage;
-          data = e.response!.data;
-        }
-      }
-      return HttpResponse.failure(
-        statusCode: statusCode!,
-        message: message!,
-        data: data,
-      );
-    }
+  }) {
+    return _http.request<AuthenticationResponse>(
+      '/api/v1/login',
+      method: 'POST',
+      data: {
+        "email": email,
+        "password": password,
+      },
+      parser: (data) {
+        return AuthenticationResponse.fromJson(data);
+      },
+    );
   }
 }

@@ -8,6 +8,7 @@ import 'package:api_application/utils/dialogs.dart';
 import 'package:api_application/utils/responsive.dart';
 import 'package:api_application/widgets/input_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -18,7 +19,6 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
   final Logger _logger = Logger();
   final GlobalKey<FormState> _formkey = GlobalKey();
   String _email = '';
@@ -30,7 +30,8 @@ class _RegisterFormState extends State<RegisterForm> {
     // print('Form is Ok $isOk');
     if (isOk) {
       ProgressDialog.show(context);
-      final response = await _authenticationAPI.register(
+      final authenticationAPI = GetIt.instance<AuthenticationAPI>();
+      final response = await authenticationAPI.register(
         username: _username,
         email: _email,
         password: _password,
