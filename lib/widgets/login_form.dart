@@ -1,4 +1,5 @@
 import 'package:api_application/Api/authentication_api.dart';
+import 'package:api_application/data/authentication_client.dart';
 import 'package:api_application/pages/home_page.dart';
 import 'package:api_application/utils/dialogs.dart';
 
@@ -16,6 +17,8 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _formkey = GlobalKey();
+  final _authenticationClient = GetIt.instance<AuthenticationClient>();
+  final _authenticationAPI = GetIt.instance<AuthenticationAPI>();
   String _email = '';
   String _password = '';
   Future<void> _submit() async {
@@ -23,13 +26,14 @@ class _LoginFormState extends State<LoginForm> {
     // print('Form is Ok $isOk');
     if (isOk) {
       ProgressDialog.show(context);
-      final authenticationAPI = GetIt.instance<AuthenticationAPI>();
-      final response = await authenticationAPI.login(
+
+      final response = await _authenticationAPI.login(
         email: _email,
         password: _password,
       );
       ProgressDialog.dissmiss(context);
       if (response.data != null) {
+        await _authenticationClient.saveSession(response.data!);
         Navigator.pushNamedAndRemoveUntil(
           context,
           HomePage.routeName,
@@ -112,19 +116,17 @@ class _LoginFormState extends State<LoginForm> {
                         },
                       ),
                     ),
-                    FloatingActionButton.extended(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      elevation: 0,
-                      label: Text(
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
                         'Forgot password',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize:
                               responsive.dp(responsive.isTablet ? 1.2 : 1.5),
+                          color: Colors.pinkAccent,
                         ),
                       ),
-                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -136,11 +138,14 @@ class _LoginFormState extends State<LoginForm> {
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: FloatingActionButton.extended(
-                    backgroundColor: Colors.pinkAccent,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    label: Text(
+                  child: FilledButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.pinkAccent,
+                      ),
+                    ),
+                    onPressed: _submit,
+                    child: Text(
                       'Sign In',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -148,7 +153,6 @@ class _LoginFormState extends State<LoginForm> {
                             responsive.dp(responsive.isTablet ? 1.2 : 1.5),
                       ),
                     ),
-                    onPressed: _submit,
                   ),
                 ),
               ),
@@ -166,21 +170,19 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: FloatingActionButton.extended(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.pinkAccent,
-                      elevation: 0,
+                    child: TextButton(
                       onPressed: () {
                         Navigator.pushNamed(
                           context,
                           'register',
                         );
                       },
-                      label: Text(
+                      child: Text(
                         'Sign Up',
                         style: TextStyle(
                           fontSize:
                               responsive.dp(responsive.isTablet ? 1.2 : 1.5),
+                          color: Colors.pinkAccent,
                         ),
                       ),
                     ),

@@ -13,7 +13,7 @@ abstract class Dialogs {
         title: Text(title),
         content: Text(description),
         actions: [
-          FloatingActionButton(
+          TextButton(
             onPressed: () {
               Navigator.pop(_);
             },

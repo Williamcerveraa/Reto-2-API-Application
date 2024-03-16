@@ -2,6 +2,7 @@ import 'package:api_application/helpers/dependency_injection.dart';
 import 'package:api_application/pages/home_page.dart';
 import 'package:api_application/pages/login_page.dart';
 import 'package:api_application/pages/register_page.dart';
+import 'package:api_application/pages/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const RegisterPage(),
+      home: const SplashPage(),
       routes: {
         RegisterPage.routeName: (_) => const RegisterPage(),
         LoginPage.routeName: (_) => const LoginPage(),

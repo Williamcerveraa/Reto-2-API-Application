@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:api_application/Api/authentication_api.dart';
+import 'package:api_application/data/authentication_client.dart';
 import 'package:api_application/pages/home_page.dart';
 import 'package:api_application/pages/login_page.dart';
 
@@ -21,6 +22,8 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final Logger _logger = Logger();
   final GlobalKey<FormState> _formkey = GlobalKey();
+  final _authenticationClient = GetIt.instance<AuthenticationClient>();
+  final _authenticationAPI = GetIt.instance<AuthenticationAPI>();
   String _email = '';
   String _password = '';
   String _username = '';
@@ -30,24 +33,22 @@ class _RegisterFormState extends State<RegisterForm> {
     // print('Form is Ok $isOk');
     if (isOk) {
       ProgressDialog.show(context);
-      final authenticationAPI = GetIt.instance<AuthenticationAPI>();
-      final response = await authenticationAPI.register(
+
+      final response = await _authenticationAPI.register(
         username: _username,
         email: _email,
         password: _password,
       );
       ProgressDialog.dissmiss(context);
       if (response.data != null) {
-        _logger.i('register ok::: ${response.data}');
+        await _authenticationClient.saveSession(response.data!);
+
         Navigator.pushNamedAndRemoveUntil(
           context,
           HomePage.routeName,
           (_) => false,
         );
       } else {
-        _logger.e('register error status code ${response.error!.statusCode}');
-        _logger.e('register error message ${response.error!.message}');
-        _logger.e('register error data ${response.error!.data}');
         String message = response.error!.message;
         if (response.error!.statusCode == -1) {
           message = 'Bad network';
@@ -134,11 +135,14 @@ class _RegisterFormState extends State<RegisterForm> {
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: FloatingActionButton.extended(
-                    backgroundColor: Colors.pinkAccent,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    label: Text(
+                  child: FilledButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.pinkAccent,
+                      ),
+                    ),
+                    onPressed: _submit,
+                    child: Text(
                       'Sign Up',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -146,7 +150,6 @@ class _RegisterFormState extends State<RegisterForm> {
                             responsive.dp(responsive.isTablet ? 1.2 : 1.5),
                       ),
                     ),
-                    onPressed: _submit,
                   ),
                 ),
               ),
@@ -164,21 +167,19 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: FloatingActionButton.extended(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.pinkAccent,
-                      elevation: 0,
+                    child: TextButton(
                       onPressed: () {
                         Navigator.pushNamed(
                           context,
                           LoginPage.routeName,
                         );
                       },
-                      label: Text(
+                      child: Text(
                         'Sign In',
                         style: TextStyle(
                           fontSize:
                               responsive.dp(responsive.isTablet ? 1.2 : 1.5),
+                          color: Colors.pinkAccent,
                         ),
                       ),
                     ),
