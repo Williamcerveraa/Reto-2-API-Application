@@ -22,7 +22,10 @@ abstract class DependencyInjection {
     );
     const secureStorage = FlutterSecureStorage();
     final authenticationAPI = AuthenticationAPI(http);
-    final authenticationClient = AuthenticationClient(secureStorage);
+    final authenticationClient = AuthenticationClient(
+      secureStorage,
+      authenticationAPI,
+    );
     final accountAPI = AccountAPI(http, authenticationClient);
 
     GetIt.instance.registerSingleton<AuthenticationAPI>(authenticationAPI);

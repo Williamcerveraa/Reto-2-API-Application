@@ -43,4 +43,19 @@ class AuthenticationAPI {
       },
     );
   }
+
+  Future<HttpResponse<AuthenticationResponse>> refreshToken({
+    required String expiredToken,
+  }) {
+    return _http.request<AuthenticationResponse>(
+      '/api/v1/refresh-token',
+      method: 'POST',
+      headers: {
+        "token": expiredToken,
+      },
+      parser: (data) {
+        return AuthenticationResponse.fromJson(data);
+      },
+    );
+  }
 }
