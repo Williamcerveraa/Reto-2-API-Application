@@ -10,7 +10,6 @@ import 'package:api_application/utils/responsive.dart';
 import 'package:api_application/widgets/input_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -20,7 +19,6 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  final Logger _logger = Logger();
   final GlobalKey<FormState> _formkey = GlobalKey();
   final _authenticationClient = GetIt.instance<AuthenticationClient>();
   final _authenticationAPI = GetIt.instance<AuthenticationAPI>();

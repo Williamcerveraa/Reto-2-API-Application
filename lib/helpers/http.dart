@@ -1,10 +1,11 @@
 import 'package:api_application/helpers/http_response.dart';
+import 'package:api_application/utils/logs.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
 class Http {
   Dio? _dio;
-  Logger? _logger;
+
   bool? _logsEnabled;
 
   Http({
@@ -13,7 +14,7 @@ class Http {
     required bool logsEnabled,
   }) {
     _dio = dio;
-    _logger = logger;
+
     _logsEnabled = logsEnabled;
   }
 
@@ -35,7 +36,7 @@ class Http {
         queryParameters: queryParameters,
         data: data,
       );
-      _logger!.i(response.data);
+      Logs.p.i(response.data);
 
       if (parser != null) {
         return HttpResponse.success<T>(parser(response.data));
@@ -43,7 +44,7 @@ class Http {
 
       return HttpResponse.success<T>(response.data);
     } catch (e) {
-      _logger!.e(e);
+      Logs.p.e(e);
       int? statusCode = 0;
       String? message = 'Unknown error';
       dynamic data;
