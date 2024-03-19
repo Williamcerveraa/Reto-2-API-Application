@@ -76,31 +76,62 @@ class _HomePageState extends State<HomePage> {
             if (_user != null)
               Column(
                 children: [
-                  ClipOval(
-                    child: Image.network(
-                      "http://192.168.0.98:9000${_user!.avatar}",
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
+                  if (_user!.avatar != null)
+                    ClipOval(
+                      child: Image.network(
+                        "http://192.168.0.98:9000${_user!.avatar}",
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Text(_user!.id),
-                  Text(_user!.email),
-                  Text(_user!.username),
-                  Text(_user!.createdAt.toIso8601String()),
+                  Text(
+                    'user id: ${_user!.id}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'email: ${_user!.email}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'username: ${_user!.username}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'date createdAt: ${_user!.createdAt.toIso8601String()}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             const SizedBox(
-              height: 30,
+              height: 20,
             ),
-            TextButton(
+            FilledButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Colors.pinkAccent,
+                ),
+              ),
               onPressed: _pickImage,
-              child: const Text('Update avatar'),
+              child: const Text('Update Avatar'),
             ),
-            TextButton(
+            FilledButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Colors.pinkAccent,
+                ),
+              ),
               onPressed: _signOut,
               child: const Text('Sign Out'),
             ),

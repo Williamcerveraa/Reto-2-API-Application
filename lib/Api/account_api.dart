@@ -27,16 +27,20 @@ class AccountAPI {
   }
 
   Future<HttpResponse<String>> updateAvatar(
-      Uint8List bytes, String filename) async {
+      Uint8List bytes, String? filename) async {
     final token = await _authenticationClient.accessToken;
-    return _http
-        .request<String>('/api/v1/update-avatar', method: "POST", headers: {
-      "token": token!,
-    }, formData: {
-      "attachment": MultipartFile.fromBytes(
-        bytes,
-        filename: filename,
-      ),
-    });
+    return _http.request<String>(
+      '/api/v1/update-avatar',
+      method: "POST",
+      headers: {
+        "token": token!,
+      },
+      formData: {
+        "attachment": MultipartFile.fromBytes(
+          bytes,
+          filename: filename,
+        ),
+      },
+    );
   }
 }

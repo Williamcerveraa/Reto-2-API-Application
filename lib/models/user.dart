@@ -4,7 +4,7 @@ class User {
   final String email;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String avatar;
+  final String? avatar;
 
   User({
     required this.id,
