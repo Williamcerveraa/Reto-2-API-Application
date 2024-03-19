@@ -1,6 +1,7 @@
 import 'package:api_application/data/authentication_client.dart';
 import 'package:api_application/pages/home_page.dart';
 import 'package:api_application/pages/login_page.dart';
+import 'package:api_application/utils/logs.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -23,6 +24,7 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _checkLogin() async {
     final token = await _authenticationClient.accessToken;
+    Logs.p.i(token);
     if (token == null) {
       Navigator.pushReplacementNamed(
         context,

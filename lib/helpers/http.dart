@@ -23,6 +23,7 @@ class Http {
     String method = "GET",
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? data,
+    Map<String, dynamic>? formData,
     Map<String, String>? headers,
     T Function(dynamic data)? parser,
   }) async {
@@ -34,7 +35,7 @@ class Http {
           headers: headers,
         ),
         queryParameters: queryParameters,
-        data: data,
+        data: formData != null ? FormData.fromMap(formData) : data,
       );
       Logs.p.i(response.data);
 

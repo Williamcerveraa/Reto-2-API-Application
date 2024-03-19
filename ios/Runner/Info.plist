@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To update the user avatar we need access to gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To update the user avatar we need access to camera</string>
 </dict>
 </plist>
